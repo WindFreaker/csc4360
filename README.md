@@ -1,0 +1,1 @@
+Here is my submission for CSC 4360 project #1. I worked on it entirely alone. I was too busy and unavailable to work with anyone in a group, so I took the entire task upon myself. There are still some bugs in this build, but I have run out of time. An improvement over my previous submissions is that this one actually supports a social media authentication.
