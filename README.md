@@ -1,3 +1,1 @@
-Here is my submission for CSC 4360 project #1. I worked on it entirely alone. I was too busy and unavailable to work with anyone in a group, so I took the entire task upon myself. There are still some bugs in this build, but I have run out of time. An improvement over my previous submissions is that this one actually supports a social media authentication.
-
-In complete honesty: what minor features that are missing from my submission isn't due to lack of trying to lack of knowhow, but lack of time. I've been incredibly busy the past two weeks. But now I am back home and can focus entirely on school. Future submissions will be much more polished and go above and beyond what is asked. That is a commitment to myself, as I genuinely want to learn a lot in this class.
+Different assignments are different branches in this repository. Please change the branch you are viewing to find the assignment you are trying to grade.
