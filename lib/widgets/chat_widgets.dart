@@ -231,11 +231,12 @@ class _ChatInputState extends State<ChatInput> {
           onPressed: () async {
             if (_ctrlInput.text != '' && _adReady) {
               _rewardedAd!.show(
-                onUserEarnedReward: (_, __) {},  // user gets nothing >:)
+                onUserEarnedReward: (_, __) async {
+                  String message = _ctrlInput.text;
+                  _ctrlInput.text = '';
+                  await MessageBoard(widget.chatID).sendMessage(message);
+                },  // user gets nothing >:)
               );
-              String message = _ctrlInput.text;
-              _ctrlInput.text = '';
-              await MessageBoard(widget.chatID).sendMessage(message);
             }
           },
         ),
