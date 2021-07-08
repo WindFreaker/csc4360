@@ -25,7 +25,7 @@ class OpenChat extends StatelessWidget {
           Column(
             children: <Widget>[
               ChatMessages(
-                stream: MessageBoard(_chatID).messageStream(),
+                stream: MessageBoard(_chatID).messageStream,
               ),
               ChatInput(
                 chatID: _chatID,

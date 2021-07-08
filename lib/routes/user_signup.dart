@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:csc4360/wrappers/auth_wrapper.dart';
-import 'package:csc4360/wrappers/firestore_wrapper.dart';
 import 'package:csc4360/wrappers/navigation_wrapper.dart';
 import 'package:csc4360/widgets/custom_forms.dart';
 
@@ -91,13 +89,10 @@ class _UserSignUpState extends State<UserSignUp> {
                         await signUpEmail(
                           email: _email,
                           password: _password,
-                        );
-
-                        await UserProfile(getUserID()).create(
                           displayName: _displayName,
                         );
 
-                        ChangeRoute(context, '/message_boards').replaceRoot();
+                        ChangeRoute(context, '/edit_profile').replaceRoot();
 
                       } catch (error) {
                         // TODO: display error when emails that already have accounts

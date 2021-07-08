@@ -68,7 +68,7 @@ class _UserLoginState extends State<UserLogin> {
                           password: _password,
                         );
 
-                        ChangeRoute(context, '/message_boards').replaceRoot();
+                        ChangeRoute(context, '/edit_profile').replaceRoot();
 
                       } on FirebaseAuthException catch(error) {
                         if (error.code == 'wrong-password' || error.code == 'user-not-found') {

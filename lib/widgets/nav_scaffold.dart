@@ -1,3 +1,4 @@
+import 'package:csc4360/wrappers/auth_wrapper.dart';
 import 'package:flutter/material.dart';
 
 import 'package:csc4360/wrappers/navigation_wrapper.dart';
@@ -5,9 +6,10 @@ import 'package:csc4360/wrappers/navigation_wrapper.dart';
 class NavigationScaffold extends StatelessWidget {
 
   final String title;
-  final Widget body;
+  final Widget contents;
+  final double padding;
 
-  NavigationScaffold({required this.title, required this.body});
+  NavigationScaffold({required this.title, required this.contents, this.padding = 30});
 
   @override
   Widget build(BuildContext context) {
@@ -22,13 +24,13 @@ class NavigationScaffold extends StatelessWidget {
           children: <Widget>[
             DrawerHeader(
               decoration: BoxDecoration(
-                color: Colors.blue,
+                color: Theme.of(context).primaryColor,
                 image: DecorationImage(
                   image: AssetImage('assets/drawer_background.jpg'),
                   fit: BoxFit.fill,
                 ),
               ),
-              child: Text('Austin Farmer\'s\nMessage Board App'),
+              child: Text('Austin Farmer\'s\nMidterm Project'),
             ),
             ListTile(
               leading: Icon(Icons.message),
@@ -41,7 +43,11 @@ class NavigationScaffold extends StatelessWidget {
               leading: Icon(Icons.account_circle),
               title: Text('Profile'),
               onTap: () {
-                ChangeRoute(context, '/edit_profile').replaceRoot();
+                if (AuthWrapper.anonymous) {
+                  ChangeRoute(context, '/new_user').replaceRoot();
+                } else {
+                  ChangeRoute(context, '/edit_profile').replaceRoot();
+                }
               },
             ),
             ListTile(
@@ -54,7 +60,12 @@ class NavigationScaffold extends StatelessWidget {
           ],
         ),
       ),
-      body: body,
+      body: SafeArea(
+        child: Padding(
+          padding: EdgeInsets.all(padding),
+          child: contents,
+        ),
+      ),
     );
   }
 }

@@ -10,24 +10,60 @@ class UserProfile {
   // required variables
   String _userID;
 
+  // variables for profile data and its handling
+  _profileDataState _state = _profileDataState.NOT_CHECKED;
+  late String _displayName;
+
   UserProfile(this._userID);
 
-  Future<void> create({required String displayName}) async {
+  Future<void> createNew({required String displayName}) async {
 
-    await _usersRef.doc(_userID).set({
-      'displayName': displayName,
-      'registeredAt': Timestamp.now(),
-    });
+    final doc = await _usersRef.doc(_userID).get();
+
+    if (!doc.exists) {
+      await _usersRef.doc(_userID).set({
+        'displayName': displayName,
+        'registeredAt': Timestamp.now(),
+      });
+    }
+
+    // yeah good luck ever doing this on accident lmao
+    throw Exception('The UserProfile already has data. Has createNew already been run?');
 
   }
 
-  Future<Map<String, dynamic>?> get() async {
+  Future<String?> get displayName async {
 
-    return await _usersRef.doc(_userID).get().then((DocumentSnapshot document) {
+    // if the firebase doc has not been read yet...
+    if (_state == _profileDataState.NOT_CHECKED) {
+      await _getData();  // ...do the downloading/reading bit
+    }
+    // depending on if the data is properly set...
+    if (_state == _profileDataState.DATA_SET) {
+      return _displayName;  // ...get the username variable
+    } else {
+      return null;  // ...or return null
+    }
+
+  }
+
+  Future<void> _getData() async {
+
+    await _usersRef.doc(_userID).get().then((DocumentSnapshot document) {
       if (document.exists) {
-        return document.data() as Map<String, dynamic>;
+
+        var data = document.data() as Map<String, dynamic>;
+        _displayName = data['displayName'];
+
+        _state = _profileDataState.DATA_SET;
+
       } else {
-        return null;
+
+        print('wow, this should not be possible');
+        print('trying to get data for a user that has not been created yet?');
+
+        _state = _profileDataState.DOES_NOT_EXIST;
+
       }
     });
 
@@ -45,6 +81,12 @@ class UserProfile {
 
 }
 
+enum _profileDataState {
+  NOT_CHECKED,
+  DATA_SET,
+  DOES_NOT_EXIST,
+}
+
 class MessageBoard {
 
   // firestore collection reference(s) for this class
@@ -55,7 +97,11 @@ class MessageBoard {
 
   MessageBoard(this._boardID);
 
-  Stream<QuerySnapshot> messageStream() {
+  static Stream<QuerySnapshot> get listStream {
+    return _msgBoardsRef.orderBy('latest_timestamp', descending: true).snapshots();
+  }
+
+  Stream<QuerySnapshot> get messageStream {
     return _msgBoardsRef.doc(_boardID).collection(_boardID)
         .orderBy('timestamp', descending: true)
         .limit(30)
@@ -69,7 +115,7 @@ class MessageBoard {
     await _msgBoardsRef.doc(_boardID).collection(_boardID).add({
       'message': message,
       'timestamp': messageAt,
-      'authorID': getUserID(),
+      'authorID': AuthWrapper.selfUID,
     });
 
     await _msgBoardsRef.doc(_boardID).set({
@@ -79,41 +125,4 @@ class MessageBoard {
 
   }
 
-  static Stream<QuerySnapshot> listStream() {
-    return _msgBoardsRef.orderBy('latest_timestamp', descending: true).snapshots();
-  }
-
 }
-
-/**
- *
-String combineTwoIDs(String userOne, String userTwo) {
-  print(userOne);
-  print(userTwo);
-  return userOne.hashCode <= userTwo.hashCode ? userOne + '_' + userTwo : userTwo + '_' + userOne;
-}
-
-Stream<QuerySnapshot> contactsListStream() {
-  return userRef.snapshots();
-}
-
-Stream<QuerySnapshot> chatsListStream() {
-  return convRef.where('members', arrayContains: AuthWrapper.getUserID()).snapshots();
-}
-
-Stream<QuerySnapshot> conversationStream(String conversationID) {
-  return convRef.doc(conversationID).collection(conversationID)
-      .orderBy('timestamp', descending: true)
-      .limit(20)
-      .snapshots();
-}
-
-Future<void> addMessageToConversation(String conversationID, String message) async {
-  await convRef.doc(conversationID).collection(conversationID).add({
-    'message': message,
-    'fromID': AuthWrapper.getUserID(),
-    'timestamp': Timestamp.now(),
-  });
-}
-
-**/
