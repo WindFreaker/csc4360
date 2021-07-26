@@ -4,27 +4,16 @@ import 'package:csc4360/wrappers/auth_wrapper.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
-import 'package:csc4360/routes/home.dart';
-
-import 'package:csc4360/routes/new_user.dart';
-import 'package:csc4360/routes/user_signup.dart';
-import 'package:csc4360/routes/user_login.dart';
-
-import 'package:csc4360/routes/message_boards.dart';
-import 'package:csc4360/routes/edit_profile.dart';
-import 'package:csc4360/routes/settings.dart';
-
-import 'package:csc4360/routes/open_chat.dart';
+import 'package:csc4360/routes/favorite_apps.dart';
+import 'package:csc4360/routes/all_apps.dart';
+import 'package:csc4360/routes/detailed_status.dart';
+import 'package:csc4360/routes/account.dart';
 
 Map<String, Widget Function(BuildContext)> routesList = {
-  '/home': (context) => Home(),
-  '/new_user': (context) => NewUser(),
-  '/user_signup': (context) => UserSignUp(),
-  '/user_login': (context) => UserLogin(),
-  '/message_boards': (context) => MessageBoards(),
-  '/edit_profile': (context) => EditProfile(),
-  '/settings': (context) => Settings(),
-  '/open_chat': (context) => OpenChat(),
+  '/favorite_apps': (context) => FavoriteApps(),
+  '/all_apps': (context) => AllApps(),
+  '/detailed_status': (context) => DetailedStatus(),
+  '/account': (context) => Account(),
 };
 
 void main() async {
@@ -44,20 +33,24 @@ class ChatApp extends StatelessWidget {
     // if user is not signed in...
     if (!AuthWrapper.signedIn) {
 
-      // ...sign the user in with an anonymous "account"
+      // ...sign the user in with an anonymous account
       anonymousAuth();
-      print('Not signed in, using anonymous mode...');
+      print('Not signed in, creating anonymous account...');
 
     }
 
     return MaterialApp(
       routes: routesList,
-      initialRoute: '/message_boards',
+      initialRoute: '/favorite_apps',
+      themeMode: ThemeMode.system,
       theme: ThemeData(
-        primaryColor: Colors.red,
+        brightness: Brightness.light,
+        primaryColor: Colors.orange,
+        accentColor: Colors.orangeAccent,
       ),
       darkTheme: ThemeData(
-        primaryColor: Colors.blue,
+        brightness: Brightness.dark,
+        accentColor: Colors.orangeAccent,
       ),
     );
 
