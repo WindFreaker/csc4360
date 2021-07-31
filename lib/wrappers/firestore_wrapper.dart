@@ -87,42 +87,36 @@ enum _profileDataState {
   DOES_NOT_EXIST,
 }
 
-class MessageBoard {
+class ServiceDB {
 
   // firestore collection reference(s) for this class
-  static var _msgBoardsRef = FirebaseFirestore.instance.collection('project1-boards');
+  static var _userReportsRef = FirebaseFirestore.instance.collection('project2-services');
 
-  // required variables
-  String _boardID;
+  String _serviceID;
 
-  MessageBoard(this._boardID);
+  ServiceDB(this._serviceID);
 
-  static Stream<QuerySnapshot> get listStream {
-    return _msgBoardsRef.orderBy('latest_timestamp', descending: true).snapshots();
-  }
-
-  Stream<QuerySnapshot> get messageStream {
-    return _msgBoardsRef.doc(_boardID).collection(_boardID)
+  Stream<QuerySnapshot> get userReportsStream {
+    return _userReportsRef.doc(_serviceID).collection('user-reports')
         .orderBy('timestamp', descending: true)
-        .limit(30)
+        .limit(10)
         .snapshots();
   }
 
-  Future<void> sendMessage(String message) async {
-
-    var messageAt = Timestamp.now();
-
-    await _msgBoardsRef.doc(_boardID).collection(_boardID).add({
-      'message': message,
-      'timestamp': messageAt,
-      'authorID': AuthWrapper.selfUID,
+  Future<void> submitUserReport(String text) async {
+    await _userReportsRef.doc(_serviceID).collection('user-reports').add({
+      'content': text,
+      'timestamp': Timestamp.now(),
+      'up-voted': [AuthWrapper.selfUID],
+      'down-voted': [],
     });
+  }
 
-    await _msgBoardsRef.doc(_boardID).set({
-      'latest_message': message,
-      'latest_timestamp': messageAt,
-    }, SetOptions(merge: true));
-
+  Future<void> voteOnUserReport(String report, bool voteType) async {
+    await _userReportsRef.doc(_serviceID).collection('user-reports').doc(report).update({
+      (voteType ? 'up-voted' : 'down-voted'): FieldValue.arrayUnion([AuthWrapper.selfUID]),
+      (voteType ? 'down-voted' : 'up-voted'): FieldValue.arrayRemove([AuthWrapper.selfUID]),
+    });
   }
 
 }

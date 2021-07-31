@@ -15,7 +15,7 @@ void main() {
 
       // proper app startup?
       await Firebase.initializeApp();
-      await tester.pumpWidget(ChatApp());
+      await tester.pumpWidget(FinalProject(ThemeMode.system));
       await tester.idle();
 
       final list = find.byType(ListView);

@@ -16,12 +16,12 @@ class ChangeRoute {
     return this;
   }
 
-  void addOnTop() {
-    Navigator.pushNamed(_context, _routeName, arguments: _data);
+  Future addOnTop() {
+    return Navigator.pushNamed(_context, _routeName, arguments: _data);
   }
 
-  void replaceRoot() {
-    Navigator.pushNamedAndRemoveUntil(_context, _routeName, (route) => false, arguments: _data);
+  Future replaceRoot() {
+    return Navigator.pushNamedAndRemoveUntil(_context, _routeName, (route) => false, arguments: _data);
   }
 
 }

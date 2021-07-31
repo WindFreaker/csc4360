@@ -1,35 +1,48 @@
+import 'package:csc4360/wrappers/prefs_wrapper.dart';
 import 'package:flutter/material.dart';
 
 import 'package:csc4360/wrappers/auth_wrapper.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:flutter/services.dart';
 
-import 'package:csc4360/routes/favorite_apps.dart';
-import 'package:csc4360/routes/all_apps.dart';
+import 'package:csc4360/routes/favorite_services.dart';
+import 'package:csc4360/routes/all_services.dart';
 import 'package:csc4360/routes/detailed_status.dart';
-import 'package:csc4360/routes/account.dart';
+import 'package:csc4360/routes/settings.dart';
 
 Map<String, Widget Function(BuildContext)> routesList = {
-  '/favorite_apps': (context) => FavoriteApps(),
-  '/all_apps': (context) => AllApps(),
+  '/favorite_services': (context) => FavoriteServices(),
+  '/all_services': (context) => AllServices(),
   '/detailed_status': (context) => DetailedStatus(),
-  '/account': (context) => Account(),
+  '/settings': (context) => Settings(),
 };
 
 void main() async {
 
   WidgetsFlutterBinding.ensureInitialized();
-  await MobileAds.instance.initialize();
+
+  // removes the ugly old android look by making the top and bottom bars transparent
+  // TODO SystemChrome.setEnabledSystemUIMode(SystemUIMode.edgeToEdge); should work in Flutter 2.4
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    statusBarColor: Colors.transparent,
+    systemNavigationBarColor: Colors.transparent,
+  ));
+
   await Firebase.initializeApp();
-  runApp(ChatApp());
+
+  ThemeMode themeChoice = await getPrefThemeMode();
+
+  runApp(FinalProject(themeChoice));
 
 }
 
-class ChatApp extends StatelessWidget {
+class FinalProject extends StatelessWidget {
+
+  final ThemeMode _themeChoice;
+  FinalProject(this._themeChoice);
 
   @override
   Widget build(BuildContext context) {
-
     // if user is not signed in...
     if (!AuthWrapper.signedIn) {
 
@@ -41,19 +54,19 @@ class ChatApp extends StatelessWidget {
 
     return MaterialApp(
       routes: routesList,
-      initialRoute: '/favorite_apps',
-      themeMode: ThemeMode.system,
+      initialRoute: '/favorite_services',
+      themeMode: _themeChoice,
       theme: ThemeData(
         brightness: Brightness.light,
-        primaryColor: Colors.orange,
-        accentColor: Colors.orangeAccent,
+        primaryColor: Colors.white,
+        accentColor: Colors.blueAccent,
       ),
       darkTheme: ThemeData(
         brightness: Brightness.dark,
-        accentColor: Colors.orangeAccent,
+        primaryColor: Colors.black,
+        accentColor: Colors.blueAccent,
       ),
     );
-
   }
 
 }
