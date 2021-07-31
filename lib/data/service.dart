@@ -34,7 +34,7 @@ class Service {
 
       try {
 
-        var response = await http.get(uriList[index]).timeout(const Duration(seconds: 10));
+        var response = await http.head(uriList[index]).timeout(const Duration(seconds: 10));
 
         if (response.statusCode == 200) {
           results = CheckStatus.ALL_GOOD;

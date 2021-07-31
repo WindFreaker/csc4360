@@ -29,27 +29,6 @@ Future<void> signOut() async {
   await FirebaseAuth.instance.signOut();
 }
 
-Future<void> signUpEmail({required email, required password, required displayName}) async {
-
-  UserCredential cred = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-    email: email,
-    password: password,
-  );
-
-  // creates the user profile
-  UserProfile(cred.user!.uid).createNew(
-    displayName: displayName,
-  );
-
-}
-
-Future<void> signInEmail({required email, required password}) async {
-  await FirebaseAuth.instance.signInWithEmailAndPassword(
-    email: email,
-    password: password,
-  );
-}
-
 Future<void> googleAuth() async {
 
   // trigger the auth flow?
@@ -65,12 +44,7 @@ Future<void> googleAuth() async {
   );
 
   // put those credentials into firebase
-  UserCredential cred = await FirebaseAuth.instance.signInWithCredential(credentials);
-
-  // create the user profile
-  UserProfile(cred.user!.uid).createNew(
-    displayName: cred.user!.displayName!,
-  );
+  await FirebaseAuth.instance.signInWithCredential(credentials);
 
 }
 
