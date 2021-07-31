@@ -14,19 +14,26 @@ final List<Service> servicesList = [
   Service(
     id: 'instagram',
     displayName: 'Instagram',
-    uriList: <Uri>[],
+    uriList: <Uri>[
+      Uri.parse('https://www.instagram.com/'),
+    ],
   ),
 
   Service(
     id: 'twitter',
     displayName: 'Twitter',
-    uriList: <Uri>[],
+    uriList: <Uri>[
+      Uri.parse('https://twitter.com/'),
+      Uri.parse('https://pbs.twimg.com/'),
+    ],
   ),
 
   Service(
     id: 'facebook',
     displayName: 'Facebook',
-    uriList: <Uri>[],
+    uriList: <Uri>[
+      Uri.parse('https://www.facebook.com/'),
+    ],
   ),
 
   Service(
@@ -34,7 +41,7 @@ final List<Service> servicesList = [
     displayName: 'Discord',
     uriList: <Uri>[
       Uri.parse('https://discord.com/'),
-      Uri.parse('https://cdn.discordapp.com/'),
+      Uri.parse('https://cdn.discordapp.com/embed/avatars/0.png'),
     ],
   ),
 
