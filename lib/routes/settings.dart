@@ -54,7 +54,7 @@ class _SettingsState extends State<Settings> {
             thickness: 2,
           ),
           Expanded(
-            flex: 6,
+            flex: 5,
             child: ListView(
               padding: const EdgeInsets.all(8),
               children: [
